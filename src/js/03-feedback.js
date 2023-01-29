@@ -1,4 +1,4 @@
-import lodashThrottle from 'lodash.throttle'
+ import throttle from 'lodash.throttle'
 
 
 const formEl = document.querySelector('.feedback-form')
@@ -7,90 +7,101 @@ const texTareaEl = document.querySelector('textarea');
 const btnEl = document.querySelector('button');
 
 // console.log(formEl);
-// console.log(inputEl);
+//  console.log(inputEl.value);
 // console.log(texTareaEl);
 // console.log(btnEl);
 
- formEl.addEventListener('submit', onFormSubmitFeedbeck)
+   const STIRAGE_KEY = 'feedback-form-state';
+   let formValue = {
+      email: '',
+      message: '',
+     };
 
-// inputEl.addEventListener("input", onInputChange);
+formEl.addEventListener('submit', onFormSubmit );
+// texTareaEl.addEventListener('input', onTextInput);
+// inputEl.addEventListener('input', onMailInput);
+formEl.addEventListener('input', throttle(onFormInput, 500));
 
-// function onInputChange(event) {
+// console.log(localStorage);
+// localStorage.setItem('feedback-form-state', JSON.stringify(formValue ));
+// const saveFeedback = localStorage.getItem('feedback-form-state');
+// const parstFeedback = JSON.parse(saveFeedback);
+// console.log( 'saveFeedback',saveFeedback);
+// console.log('parstFeedback',parstFeedback );
 
-//     const efgg = inputEl.textContent;
-// //    outputEl.textContent = event.currentTarget.value ? event.currentTarget.value : 'Anonymous'
-//     // console.log(outputEl);
-//    console.log(inputEl.value);
-//   addFeedbeckToStorage(efgg)
-// };
+// formEl.addEventListener('submit', feedbackMess );
+feedbackMess();
+// ===============================================
+function onFormInput(e){
+   // console.log('ho');
+   try{
+    const email = formValue.email;
+    const message = formValue.message;
+   // console.log(email);
+   // console.log(message);
+   // console.log(e.target.value);
+     formValue[e.target.name] = e.target.value;
+      // console.log(formValue);
+    localStorage.setItem(STIRAGE_KEY, JSON.stringify(formValue));
+   }catch (err){
+      console.log(err);
+  };
+}
 
+// =============================================
+// function onMailInput(e){
+//    // console.log('hi');
+//    const email = e.currentTarget.value;
+//     console.log(email);
+//    //   localStorage.setItem(STIRAGE_KEY, email); 
+//  }
 
+//  отсл по умолч
+//  чистим хранил
+//  чистим форму
+function onFormSubmit(e){
+   e.preventDefault();
+   try{
+//  console.log('sos');
+     if (formValue.email === '') { 
+      const messageE = (" полe Email повиннo бути заповненo.")
+       return  alert(messageE);  
+       } 
+       console.log(formValue);
+     e.target.reset();
+     localStorage.removeItem(STIRAGE_KEY);
+   }catch (err){
+      console.log(err);
+  };
+}
 
-function onFormSubmitFeedbeck(event) {
-    event.preventDefault();
-   
-   const {elements : { email, message}
-  } = event.currentTarget;
-   const mailValue = email.value;
-    const formValue = { email: email.value, message : message.value }
-   if (mailValue === '') { 
-   const messageE = (" полe повиннo бути заповненo.")
-    return  alert(messageE);  
-    } 
-    console.log(formValue);
-//  console.log('Name:', mailValue);
-//  console.log('message:', message.value);
-   event.currentTarget.reset();
+// // получ знач формы
+// // сохр в хран
+// function onTextInput(e){
+//    // console.log('good')
+//    const message = e.currentTarget.value; 
+//    console.log(message);
+//    // localStorage.setItem(STIRAGE_KEY, message);
+// }
 
-   addFeedbeckToStorage(formValue)
-
+// данные из хранилища
+function feedbackMess(){
+   try{
+   const saveFeedbak = localStorage.getItem(STIRAGE_KEY);
+   const saveFeedbackParse = JSON.parse(saveFeedbak)
+      if(saveFeedbackParse) {
+   //  console.log(saveFeedbackParse.email)
+   //   console.log(saveFeedbackParse.message)
+   //   console.log(inputEl.value);
+     inputEl.value = saveFeedbackParse.email;
+      texTareaEl.value = saveFeedbackParse.message;
+      }
+   }catch (err){
+          console.log(err);
+      };
 }
 
 
 
 
-function save(key, value){
-    try{
-   const  serializeData = JSON.stringify(value);
-   localStorage.setItem(key, serializeData); 
-}catch (err){
-    console.log(err);
-}
-};
 
-const STIRAGE_KEY = 'feedback-form-state'
-// save(STIRAGE_KEY, {
-//     mail : "ho",
-// })
-
-
-function load(key, value){
-    try{
-//    const  serializeData = JSON.stringify(value);
-   const serializeState = localStorage.getItem(key); 
-  return serializeState === null ? undefined : JSON.parse(serializeState);
-
-
-}catch (err){
-    console.log(err);
-}
-};
-
-console.log(load(STIRAGE_KEY));
-
-function createFeedbeckObj(data,isDone ){
-    return {
-        data,
-        isDone,
-    };
-};
-
-function addFeedbeckToStorage(data, isDone = false){
-    const currentState = load(STIRAGE_KEY);
-    if (currentState === undefined) {
-        save(STIRAGE_KEY, [createFeedbeckObj(data, isDone)])
-    } else{
-        currentState.push(createFeedbeckObj(data,isDone));
-        save(STIRAGE_KEY, currentState);
-    }
-}
