@@ -33,16 +33,18 @@ formEl.addEventListener('input', throttle(onFormInput, 500));
 feedbackMess();
 // ===============================================
 function onFormInput(e){
-   // console.log('ho');
-   try{
+    e.preventDefault();
+   //  console.log('ho');
+    try{
+
     const email = formValue.email;
     const message = formValue.message;
    // console.log(email);
    // console.log(message);
    // console.log(e.target.value);
      formValue[e.target.name] = e.target.value;
-      // console.log(formValue);
-    localStorage.setItem(STIRAGE_KEY, JSON.stringify(formValue));
+   //  console.log(formValue);
+     localStorage.setItem(STIRAGE_KEY, JSON.stringify(formValue));
    }catch (err){
       console.log(err);
   };
@@ -61,19 +63,18 @@ function onFormInput(e){
 //  чистим форму
 function onFormSubmit(e){
    e.preventDefault();
-   try{
+  
 //  console.log('sos');
-     if (formValue.email === '') { 
-      const messageE = (" полe Email повиннo бути заповненo.")
-       return  alert(messageE);  
-       } 
-       console.log(formValue);
+   //   if (formValue.email === '') { 
+   //    const messageE = (" Поле Email повиннo бути заповненo!")
+   //     return  alert(messageE);  
+   //     } 
+     
+        console.log(formValue);
      e.target.reset();
      localStorage.removeItem(STIRAGE_KEY);
-   }catch (err){
-      console.log(err);
-  };
-}
+};
+
 
 // // получ знач формы
 // // сохр в хран
@@ -86,20 +87,17 @@ function onFormSubmit(e){
 
 // данные из хранилища
 function feedbackMess(){
-   try{
+    try{
    const saveFeedbak = localStorage.getItem(STIRAGE_KEY);
    const saveFeedbackParse = JSON.parse(saveFeedbak)
       if(saveFeedbackParse) {
-   //  console.log(saveFeedbackParse.email)
-   //   console.log(saveFeedbackParse.message)
-   //   console.log(inputEl.value);
-     inputEl.value = saveFeedbackParse.email;
-      texTareaEl.value = saveFeedbackParse.message;
-      }
-   }catch (err){
+         inputEl.value = saveFeedbackParse.email;
+         texTareaEl.value = saveFeedbackParse.message;
+   }}catch (err){
           console.log(err);
-      };
+    };
 }
+
 
 
 
