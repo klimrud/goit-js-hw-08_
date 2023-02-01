@@ -17,8 +17,11 @@ const btnEl = document.querySelector('button');
       message: '',
      };
 
+     
+  
+
 formEl.addEventListener('submit', onFormSubmit );
-// texTareaEl.addEventListener('input', onTextInput);
+//  texTareaEl.addEventListener('input', onTextInput);
 // inputEl.addEventListener('input', onMailInput);
 formEl.addEventListener('input', throttle(onFormInput, 500));
 
@@ -29,23 +32,25 @@ formEl.addEventListener('input', throttle(onFormInput, 500));
 // console.log( 'saveFeedback',saveFeedback);
 // console.log('parstFeedback',parstFeedback );
 
-// formEl.addEventListener('submit', feedbackMess );
+
 feedbackMess();
+
 // ===============================================
 function onFormInput(e){
     e.preventDefault();
    //  console.log('ho');
     try{
-
-    const email = formValue.email;
-    const message = formValue.message;
+   //  const email = formValue.email;
+   //  const message = formValue.message;
    // console.log(email);
    // console.log(message);
    // console.log(e.target.value);
-     formValue[e.target.name] = e.target.value;
+    formValue[e.target.name] = e.target.value;
    //  console.log(formValue);
-     localStorage.setItem(STIRAGE_KEY, JSON.stringify(formValue));
-   }catch (err){
+    localStorage.setItem(STIRAGE_KEY, JSON.stringify(formValue));
+   // save(STIRAGE_KEY, formValue);
+
+}catch (err){
       console.log(err);
   };
 }
@@ -86,17 +91,31 @@ function onFormSubmit(e){
 // }
 
 // данные из хранилища
-function feedbackMess(){
-    try{
+// function feedbackMess(){
+//    const saveFeedbak = localStorage.getItem(STIRAGE_KEY);
+//    const saveFeedbackParse = JSON.parse(saveFeedbak)
+//       if(saveFeedbackParse) {
+//          inputEl.value = saveFeedbackParse.email;
+//          texTareaEl.value = saveFeedbackParse.message;
+//     }
+// };
+
+
+function feedbackMess() {
    const saveFeedbak = localStorage.getItem(STIRAGE_KEY);
-   const saveFeedbackParse = JSON.parse(saveFeedbak)
-      if(saveFeedbackParse) {
-         inputEl.value = saveFeedbackParse.email;
-         texTareaEl.value = saveFeedbackParse.message;
-   }}catch (err){
-          console.log(err);
-    };
-}
+   const saveFeedbackParse = JSON.parse(saveFeedbak);
+   if (saveFeedbackParse) {
+     inputEl.value = saveFeedbackParse?.email;
+     texTareaEl.value = saveFeedbackParse?.message;
+     formValue.email = saveFeedbackParse?.email;
+     formValue.message = saveFeedbackParse?.message;
+   }
+ }
+
+
+
+
+
 
 
 
